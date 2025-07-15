@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TagSpeak Chat Test</title>
+</head>
+<body>
+    <h1>TagSpeak Chat Test</h1>
+    <textarea id="userInput" rows="4" cols="50" placeholder="Enter TagSpeak packet..."></textarea><br>
+    <button onclick="sendMessage()">Send</button>
+    <pre id="responseBox"></pre>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            const responseBox = document.getElementById("responseBox");
+
+            try {
+                const res = await fetch('http://localhost:3000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userInput })
+                });
+
+                const data = await res.json();
+                responseBox.textContent = data.choices[0].message.content;
+            } catch (err) {
+                responseBox.textContent = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
